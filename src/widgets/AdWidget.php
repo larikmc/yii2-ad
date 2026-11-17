@@ -44,6 +44,14 @@ class AdWidget extends Widget
     /**
      * {@inheritdoc}
      */
+    public function getViewPath(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'views';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function run(): string
     {
         if (empty($this->position_id)) {
