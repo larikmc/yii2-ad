@@ -1,0 +1,35 @@
+{
+    "name": "larikmc/yii2-ad",
+    "description": "Advertising banners and blocks management module for Yii2 with device targeting, delayed execution, cache invalidation and frontend widget",
+    "keywords": [
+        "yii2",
+        "extension",
+        "ad",
+        "advertising",
+        "banner",
+        "yandex-rtb",
+        "google-adsense",
+        "widget"
+    ],
+    "type": "yii2-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "LarikMC",
+            "homepage": "https://64web.ru",
+            "email": "larikmc@mail.ru"
+        }
+    ],
+    "require": {
+        "php": ">=7.4.0 || >=8.0",
+        "yiisoft/yii2": "~2.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "larikmc\\ad\\": "src/"
+        }
+    },
+    "extra": {
+        "bootstrap": "larikmc\\ad\\Bootstrap"
+    }
+}
