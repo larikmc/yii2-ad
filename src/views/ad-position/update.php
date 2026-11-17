@@ -11,7 +11,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Позиции блоков', 'url
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Редактировать';
 ?>
-<div class="ad-position-update">
+<div class="slot-position-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

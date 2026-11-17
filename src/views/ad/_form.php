@@ -9,7 +9,7 @@ use yii\widgets\ActiveForm;
 /* @var $data array */
 ?>
 
-<div class="ad-form">
+<div class="promo-form-panel">
 
     <?php $form = ActiveForm::begin(); ?>
 
@@ -66,10 +66,10 @@ use yii\widgets\ActiveForm;
                 2000 => '2 секунды',
                 2500 => '2,5 секунды',
                 3000 => '3 секунды',
-            ], ['class' => 'form-select', 'id' => 'ad-wait-select']) ?>
+            ], ['class' => 'form-select', 'id' => 'promo-wait-select']) ?>
         </div>
 
-        <div class="col-md-4" id="ad-frequency-container" style="<?= (int)$model->wait === 0 ? 'display:none;' : '' ?>">
+        <div class="col-md-4" id="promo-frequency-container" style="<?= (int)$model->wait === 0 ? 'display:none;' : '' ?>">
             <?= $form->field($model, 'frequency')->dropDownList([
                 1 => 'всем (100%)',
                 2 => 'каждому 2 (50%)',
@@ -109,8 +109,8 @@ use yii\widgets\ActiveForm;
 <?php
 $js = <<<'JS'
 (function() {
-    var select = document.getElementById('ad-wait-select');
-    var container = document.getElementById('ad-frequency-container');
+    var select = document.getElementById('promo-wait-select');
+    var container = document.getElementById('promo-frequency-container');
     if (select && container) {
         select.addEventListener('change', function() {
             container.style.display = (parseInt(this.value, 10) > 0) ? '' : 'none';

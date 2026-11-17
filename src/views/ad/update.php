@@ -11,7 +11,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Реклама', 'url' => ['index'
 $this->params['breadcrumbs'][] = ['label' => '#' . $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Редактировать';
 ?>
-<div class="ad-update">
+<div class="promo-update-panel">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

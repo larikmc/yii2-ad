@@ -52,7 +52,7 @@ $formatLabel = ($mobile === 1) ? 'Mobile' : 'PC';
 $style = $marginTop > 0 ? "margin-top: {$marginTop}px;" : '';
 ?>
 
-<div class="ad-debug-card" style="<?= $style ?>background:#ffffff; border:1px dashed #cbd5e1; border-radius:12px; padding:12px 16px; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,0.04); display:flex; gap:12px; align-items:center; font-family:system-ui,-apple-system,sans-serif; font-size:13px; color:#1e293b;">
+<div class="content-slot-debug" style="<?= $style ?>background:#ffffff; border:1px dashed #cbd5e1; border-radius:12px; padding:12px 16px; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,0.04); display:flex; gap:12px; align-items:center; font-family:system-ui,-apple-system,sans-serif; font-size:13px; color:#1e293b;">
     <div style="flex-shrink:0;">
         <?= $badge ?>
     </div>

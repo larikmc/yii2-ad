@@ -10,7 +10,7 @@ $this->title = 'Добавить рекламу';
 $this->params['breadcrumbs'][] = ['label' => 'Реклама', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="ad-create">
+<div class="promo-create-panel">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

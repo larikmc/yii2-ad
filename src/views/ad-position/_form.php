@@ -9,7 +9,7 @@ use yii\widgets\ActiveForm;
 /* @var $data array */
 ?>
 
-<div class="ad-position-form">
+<div class="slot-position-form">
 
     <?php $form = ActiveForm::begin(); ?>
 

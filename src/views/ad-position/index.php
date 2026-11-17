@@ -14,7 +14,7 @@ use yii\widgets\Pjax;
 $this->title = 'Позиции блоков';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="ad-position-index">
+<div class="slot-position-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

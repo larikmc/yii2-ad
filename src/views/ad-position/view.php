@@ -10,7 +10,7 @@ $this->title = 'Позиция: ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Позиции блоков', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="ad-position-view">
+<div class="slot-position-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

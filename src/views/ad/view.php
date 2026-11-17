@@ -10,7 +10,7 @@ $this->title = 'Реклама #' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Реклама', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="ad-view">
+<div class="promo-view-panel">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

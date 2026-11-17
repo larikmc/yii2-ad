@@ -15,19 +15,19 @@ $this->title = 'Реклама';
 $this->params['breadcrumbs'][] = $this->title;
 
 $this->registerCss(<<<'CSS'
-.ad-index .table-responsive {
+.promo-index-panel .table-responsive {
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
-.ad-index .grid-view table {
+.promo-index-panel .grid-view table {
     min-width: 1100px;
 }
 CSS
 );
 ?>
 
-<div class="ad-index">
+<div class="promo-index-panel">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

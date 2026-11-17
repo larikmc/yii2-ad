@@ -13,12 +13,12 @@ $frequency = max(1, (int)($ad['frequency'] ?? 1));
 $rawCode = (string)($ad['code'] ?? '');
 
 $shouldDelay = ($wait > 0) && ($frequency === 1 || mt_rand(1, $frequency) === 1);
-$containerId = 'ad-block-' . $positionId . '-' . mt_rand(1000, 9999);
+$containerId = 'content-slot-' . $positionId . '-' . mt_rand(1000, 9999);
 $style = $marginTop > 0 ? "margin-top: {$marginTop}px;" : '';
 ?>
 
 <?php if (!$shouldDelay): ?>
-    <div id="<?= $containerId ?>" class="ad-block ad-block-<?= (int)$positionId ?>"<?= $style !== '' ? ' style="' . $style . '"' : '' ?>>
+    <div id="<?= $containerId ?>" class="content-slot content-slot-<?= (int)$positionId ?>"<?= $style !== '' ? ' style="' . $style . '"' : '' ?>>
         <?= $rawCode ?>
     </div>
 <?php else: ?>
@@ -33,7 +33,7 @@ $style = $marginTop > 0 ? "margin-top: {$marginTop}px;" : '';
         // Render non-script HTML immediately so target containers (<div id="yandex_rtb_...">) exist in DOM
         $htmlOnly = preg_replace($scriptPattern, '', $rawCode);
         ?>
-        <div id="<?= $containerId ?>" class="ad-block ad-block-<?= (int)$positionId ?>"<?= $style !== '' ? ' style="' . $style . '"' : '' ?>>
+        <div id="<?= $containerId ?>" class="content-slot content-slot-<?= (int)$positionId ?>"<?= $style !== '' ? ' style="' . $style . '"' : '' ?>>
             <?= $htmlOnly ?>
             <script>
             (function() {
@@ -71,7 +71,7 @@ $style = $marginTop > 0 ? "margin-top: {$marginTop}px;" : '';
             </script>
         </div>
     <?php else: ?>
-        <div id="<?= $containerId ?>" class="ad-block ad-block-<?= (int)$positionId ?>" style="display:none;<?= $style ?>">
+        <div id="<?= $containerId ?>" class="content-slot content-slot-<?= (int)$positionId ?>" style="display:none;<?= $style ?>">
             <?= $rawCode ?>
         </div>
         <script>

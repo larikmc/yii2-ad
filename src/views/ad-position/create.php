@@ -10,7 +10,7 @@ $this->title = 'Создать позицию блоков';
 $this->params['breadcrumbs'][] = ['label' => 'Позиции блоков', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="ad-position-create">
+<div class="slot-position-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
