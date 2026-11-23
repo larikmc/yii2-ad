@@ -29,6 +29,9 @@ class ViewHelper
         return [
             'class' => ActionColumn::class,
             'template' => $template,
+            'headerOptions' => ['class' => 'action-column'],
+            'filterOptions' => ['class' => 'action-column'],
+            'contentOptions' => ['class' => 'action-column'],
             'options' => $options,
             'buttons' => [
                 'update' => static function ($url, $model, $key) use ($urlCreator) {

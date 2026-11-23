@@ -85,10 +85,13 @@ use yii\widgets\ActiveForm;
         </div>
     </div>
 
-    <?= $form->field($model, 'code')->textarea([
+    <?= $form->field($model, 'code', [
+        'options' => ['class' => 'form-group promo-field-code mb-3'],
+    ])->textarea([
+        'id' => 'banner-source-content',
         'rows' => 10,
         'class' => 'form-control',
-        'style' => 'width: 100%; font-family: monospace; font-size: 13px;',
+        'style' => 'width: 100%; font-family: monospace; font-size: 13px; display: block !important;',
         'placeholder' => 'Вставьте HTML / JavaScript код баннера',
     ]) ?>
 

@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <p>
-        <?= Html::a('+ Добавить', ['create'], ['class' => 'btn btn-primary sz-btn-add']) ?>
+        <?= Html::a('+ Добавить', ['create'], ['class' => 'btn btn-success sz-btn-add']) ?>
     </p>
 
     <?php Pjax::begin(); ?>

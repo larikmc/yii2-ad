@@ -26,6 +26,31 @@ class AdPosition extends ActiveRecord
     }
 
     /**
+     * Override formName to prevent AdBlock filters targeting "AdPosition"
+     */
+    public function formName(): string
+    {
+        return 'SlotPosition';
+    }
+
+    /**
+     * Supports both new SlotPosition and legacy AdPosition payload keys.
+     */
+    public function load($data, $formName = null): bool
+    {
+        if ($formName === null) {
+            if (isset($data['SlotPosition'])) {
+                return parent::load($data, 'SlotPosition');
+            }
+            if (isset($data['AdPosition'])) {
+                return parent::load($data, 'AdPosition');
+            }
+        }
+
+        return parent::load($data, $formName);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function rules(): array

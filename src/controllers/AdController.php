@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace larikmc\ad\controllers;
 
 use larikmc\ad\models\Ad;
+use larikmc\ad\models\AdNetwork;
 use larikmc\ad\models\AdPosition;
 use larikmc\ad\models\AdSearch;
 use Yii;
@@ -45,9 +46,48 @@ class AdController extends Controller
         $searchModel = new AdSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        $networks = [];
+        $headSyncWarnings = [];
+        try {
+            $networks = AdNetwork::find()->orderBy(['sort_order' => SORT_ASC, 'id' => SORT_ASC])->all();
+
+            $activeNetworkPartners = [];
+            foreach ($networks as $net) {
+                if ($net->status && $net->partner_id) {
+                    $activeNetworkPartners[$net->partner_id] = $net;
+                }
+            }
+
+            // Check Caramel active ads vs head script
+            $caramelAdsCount = (int) Ad::find()->where(['ad' => Ad::PARTNER_CARAMEL, 'status' => 1])->count();
+            if ($caramelAdsCount > 0 && !isset($activeNetworkPartners[Ad::PARTNER_CARAMEL])) {
+                $caramelNet = AdNetwork::findOne(['code' => 'caramel']) ?: AdNetwork::findOne(['partner_id' => Ad::PARTNER_CARAMEL]);
+                $headSyncWarnings[] = [
+                    'partner' => 'Digital Caramel',
+                    'count' => $caramelAdsCount,
+                    'network_id' => $caramelNet ? $caramelNet->id : null,
+                ];
+            }
+
+            // Check Yandex active ads vs head script
+            $yandexAdsCount = (int) Ad::find()->where(['ad' => Ad::PARTNER_YANDEX, 'status' => 1])->count();
+            if ($yandexAdsCount > 0 && !isset($activeNetworkPartners[Ad::PARTNER_YANDEX])) {
+                $yandexNet = AdNetwork::findOne(['code' => 'yandex']) ?: AdNetwork::findOne(['partner_id' => Ad::PARTNER_YANDEX]);
+                $headSyncWarnings[] = [
+                    'partner' => 'Яндекс РТБ',
+                    'count' => $yandexAdsCount,
+                    'network_id' => $yandexNet ? $yandexNet->id : null,
+                ];
+            }
+        } catch (\Throwable $e) {
+            // fallback if table does not exist
+        }
+
         $data = [
             'position' => AdPosition::getListCached(),
             'partner' => Ad::partnerList(),
+            'networks' => $networks,
+            'headSyncWarnings' => $headSyncWarnings,
         ];
 
         return $this->render('index', [

@@ -23,17 +23,144 @@ $this->registerCss(<<<'CSS'
 .promo-index-panel .grid-view table {
     min-width: 1100px;
 }
+.promo-head-status-card {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 12px 16px;
+}
+.promo-net-pill {
+    display: inline-flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 20px;
+    padding: 4px 12px;
+    margin-right: 8px;
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+.promo-net-pill .status-indicator {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    margin-right: 6px;
+    display: inline-block;
+}
+.status-indicator.on { background-color: #198754; box-shadow: 0 0 0 2px rgba(25, 135, 84, 0.2); }
+.status-indicator.off { background-color: #dc3545; }
 CSS
 );
+
+$networks = $data['networks'] ?? [];
+$headSyncWarnings = $data['headSyncWarnings'] ?? [];
 ?>
 
 <div class="promo-index-panel">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="mb-0"><?= Html::encode($this->title) ?></h1>
+        <div>
+            <?= Html::a('⚙️ Сети (<head>)', ['/ad/ad-network/index'], ['class' => 'btn btn-outline-secondary me-2']) ?>
+            <?= Html::a('+ Добавить', ['create'], ['class' => 'btn btn-success sz-btn-add']) ?>
+        </div>
+    </div>
 
-    <p>
-        <?= Html::a('+ Добавить', ['create'], ['class' => 'btn btn-primary sz-btn-add']) ?>
-    </p>
+    <!-- 1. Панель мониторинга скриптов в <head> -->
+    <?php if (!empty($networks)): ?>
+        <div class="promo-head-status-card mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold" style="font-size: 13.5px;">
+                    🌐 Статус загрузчиков в <code>&lt;head&gt;</code>:
+                </span>
+                <span class="text-muted small">
+                    <?= Html::a('Управление всеми сетями →', ['/ad/ad-network/index'], ['class' => 'text-decoration-none']) ?>
+                </span>
+            </div>
+            <div class="d-flex flex-wrap align-items-center">
+                <?php foreach ($networks as $net): ?>
+                    <div class="promo-net-pill">
+                        <span class="status-indicator <?= $net->status ? 'on' : 'off' ?>"></span>
+                        <span class="me-2 fw-semibold"><?= Html::encode($net->name) ?></span>
+                        <?php if ($net->status): ?>
+                            <span class="badge bg-success-subtle text-success me-2" style="font-size: 11px;">Вкл</span>
+                            <?= Html::a('Откл', ['/ad/ad-network/toggle', 'id' => $net->id], [
+                                'class' => 'btn btn-sm btn-link text-danger p-0 text-decoration-none',
+                                'style' => 'font-size: 11.5px;',
+                                'data-method' => 'post',
+                                'title' => 'Отключить загрузку библиотеки из <head>',
+                            ]) ?>
+                        <?php else: ?>
+                            <span class="badge bg-secondary-subtle text-secondary me-2" style="font-size: 11px;">Выкл</span>
+                            <?= Html::a('Вкл', ['/ad/ad-network/toggle', 'id' => $net->id], [
+                                'class' => 'btn btn-sm btn-link text-success p-0 text-decoration-none fw-bold',
+                                'style' => 'font-size: 11.5px;',
+                                'data-method' => 'post',
+                                'title' => 'Включить загрузку библиотеки в <head>',
+                            ]) ?>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <!-- 2. Предупреждения о рассинхронизации (баннеры включены, но head отключен) -->
+    <?php if (!empty($headSyncWarnings)): ?>
+        <?php foreach ($headSyncWarnings as $warn): ?>
+            <div class="alert alert-warning border-start border-4 border-warning d-flex align-items-center justify-content-between mb-3 py-2 px-3">
+                <div>
+                    <strong>⚠️ Внимание:</strong> В таблице включены баннеры сети <strong><?= Html::encode($warn['partner']) ?></strong> (<?= (int)$warn['count'] ?> шт.), однако скрипт сети в <code>&lt;head&gt;</code> сейчас <strong>ОТКЛЮЧЁН</strong>! Баннеры не смогут отобразиться посетителям.
+                </div>
+                <?php if ($warn['network_id']): ?>
+                    <div>
+                        <?= Html::a('Включить ' . Html::encode($warn['partner']) . ' в <head>', ['/ad/ad-network/toggle', 'id' => $warn['network_id']], [
+                            'class' => 'btn btn-sm btn-warning fw-bold text-nowrap ms-3',
+                            'data-method' => 'post',
+                        ]) ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
+
+    <!-- 3. Справка по Adfinity (авто-встраивание) -->
+    <div class="alert alert-info border-start border-4 border-info d-flex align-items-start mb-3 py-2 px-3">
+        <div class="me-3 fs-4" style="line-height: 1.2;">💡</div>
+        <div class="flex-grow-1" style="font-size: 13.5px;">
+            <div class="fw-bold mb-1">Рекламная сеть Adfinity (авто-встраиваемые форматы)</div>
+            <div class="text-muted">
+                У сети <strong>Adfinity</strong> блоки являются авто-встраиваемыми. Их <strong>не нужно</strong> создавать в этом списке и вручную привязывать к позициям сайта. Скрипт подключается только в <code>&lt;head&gt;</code>, после чего сам находит места на страницах и размещает рекламу.
+            </div>
+            <?php
+            $adfinityNet = null;
+            foreach ($networks as $n) {
+                if ($n->code === 'adfinity' || $n->partner_id === 8) {
+                    $adfinityNet = $n;
+                    break;
+                }
+            }
+            ?>
+            <?php if ($adfinityNet): ?>
+                <div class="mt-2">
+                    Статус Adfinity в &lt;head&gt;:
+                    <?php if ($adfinityNet->status): ?>
+                        <span class="badge bg-success">Подключён в &lt;head&gt;</span>
+                        <?= Html::a('Отключить', ['/ad/ad-network/toggle', 'id' => $adfinityNet->id], [
+                            'class' => 'btn btn-xs btn-outline-danger btn-sm py-0 px-2 ms-2',
+                            'data-method' => 'post',
+                        ]) ?>
+                    <?php else: ?>
+                        <span class="badge bg-secondary">Отключён</span>
+                        <?= Html::a('Включить', ['/ad/ad-network/toggle', 'id' => $adfinityNet->id], [
+                            'class' => 'btn btn-xs btn-outline-success btn-sm py-0 px-2 ms-2',
+                            'data-method' => 'post',
+                        ]) ?>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
 
     <?php Pjax::begin(); ?>
 

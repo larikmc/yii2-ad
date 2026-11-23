@@ -46,6 +46,31 @@ class Ad extends ActiveRecord
     }
 
     /**
+     * Override formName to prevent AdBlock filters targeting "Ad" and "field-ad-*"
+     */
+    public function formName(): string
+    {
+        return 'PromoItem';
+    }
+
+    /**
+     * Supports both new PromoItem and legacy Ad payload keys.
+     */
+    public function load($data, $formName = null): bool
+    {
+        if ($formName === null) {
+            if (isset($data['PromoItem'])) {
+                return parent::load($data, 'PromoItem');
+            }
+            if (isset($data['Ad'])) {
+                return parent::load($data, 'Ad');
+            }
+        }
+
+        return parent::load($data, $formName);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function init(): void
@@ -144,7 +169,6 @@ class Ad extends ActiveRecord
             self::PARTNER_MARKET => 'Market',
             self::PARTNER_POZDRAVLENIYA => 'Поздравления',
             self::PARTNER_CARAMEL => 'Caramel',
-            self::PARTNER_ADFINITY => 'Adfinity',
         ];
     }
 
@@ -167,6 +191,9 @@ class Ad extends ActiveRecord
      */
     public function getAdPartnerName(): string
     {
+        if ($this->ad === self::PARTNER_ADFINITY) {
+            return 'Adfinity (авто-встраивание)';
+        }
         $list = self::partnerList();
         return $list[$this->ad] ?? 'Неизвестно';
     }
