@@ -19,6 +19,57 @@ $this->registerCss(<<<'CSS'
     width: 100%;
     overflow-x: auto;
 }
+/* Фиксированный двухпозиционный переключатель [ Вкл | Откл ] */
+.promo-toggle-group {
+    display: inline-flex;
+    align-items: center;
+    background: #eef1f4;
+    border: 1px solid #dee2e6;
+    border-radius: 16px;
+    padding: 2px;
+    user-select: none;
+    vertical-align: middle;
+}
+.promo-btn {
+    display: inline-block;
+    padding: 2px 10px;
+    font-size: 11.5px;
+    font-weight: 600;
+    line-height: 1.35;
+    border-radius: 14px;
+    text-decoration: none !important;
+    transition: all 0.15s ease-in-out;
+}
+/* Левая позиция: Вкл */
+.promo-btn--on.is-active {
+    background-color: #198754;
+    color: #fff;
+    cursor: default;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+}
+.promo-btn--on.is-inactive {
+    color: #495057;
+    background: transparent;
+}
+.promo-btn--on.is-inactive:hover {
+    color: #198754;
+    background: rgba(25, 135, 84, 0.14);
+}
+/* Правая позиция: Откл */
+.promo-btn--off.is-active {
+    background-color: #dc3545;
+    color: #fff;
+    cursor: default;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+}
+.promo-btn--off.is-inactive {
+    color: #495057;
+    background: transparent;
+}
+.promo-btn--off.is-inactive:hover {
+    color: #dc3545;
+    background: rgba(220, 53, 69, 0.14);
+}
 CSS
 );
 ?>
@@ -78,25 +129,31 @@ CSS
 
             [
                 'attribute' => 'status',
-                'options' => ['width' => '130'],
+                'options' => ['width' => '140'],
                 'format' => 'raw',
                 'filter' => [
                     1 => 'Вкл в <head>',
                     0 => 'Выкл',
                 ],
                 'content' => static function ($model) {
+                    $html = '<div class="promo-toggle-group">';
                     if ($model->status) {
-                        return Html::a('<span class="badge text-bg-success">Вкл в &lt;head&gt;</span>', ['toggle', 'id' => $model->id], [
-                            'class' => 'text-decoration-none',
-                            'title' => 'Нажмите для отключения',
+                        $html .= '<span class="promo-btn promo-btn--on is-active" title="Сейчас включено в <head>">Вкл</span>';
+                        $html .= Html::a('Откл', ['toggle', 'id' => $model->id], [
+                            'class' => 'promo-btn promo-btn--off is-inactive',
                             'data-method' => 'post',
+                            'title' => 'Отключить из <head>',
                         ]);
+                    } else {
+                        $html .= Html::a('Вкл', ['toggle', 'id' => $model->id], [
+                            'class' => 'promo-btn promo-btn--on is-inactive',
+                            'data-method' => 'post',
+                            'title' => 'Включить в <head>',
+                        ]);
+                        $html .= '<span class="promo-btn promo-btn--off is-active" title="Сейчас отключено">Откл</span>';
                     }
-                    return Html::a('<span class="badge text-bg-danger">Отключен</span>', ['toggle', 'id' => $model->id], [
-                        'class' => 'text-decoration-none',
-                        'title' => 'Нажмите для включения',
-                        'data-method' => 'post',
-                    ]);
+                    $html .= '</div>';
+                    return $html;
                 },
             ],
 

@@ -35,20 +35,74 @@ $this->registerCss(<<<'CSS'
     background: #fff;
     border: 1px solid #dee2e6;
     border-radius: 20px;
-    padding: 4px 12px;
-    margin-right: 8px;
-    margin-bottom: 6px;
+    padding: 3px 6px 3px 12px;
+    margin-right: 10px;
+    margin-bottom: 8px;
     font-size: 13px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
 }
 .promo-net-pill .status-indicator {
     width: 9px;
     height: 9px;
     border-radius: 50%;
-    margin-right: 6px;
+    margin-right: 7px;
     display: inline-block;
 }
 .status-indicator.on { background-color: #198754; box-shadow: 0 0 0 2px rgba(25, 135, 84, 0.2); }
 .status-indicator.off { background-color: #dc3545; }
+
+/* Фиксированный двухпозиционный переключатель [ Вкл | Откл ] */
+.promo-toggle-group {
+    display: inline-flex;
+    align-items: center;
+    background: #eef1f4;
+    border: 1px solid #dee2e6;
+    border-radius: 16px;
+    padding: 2px;
+    margin-left: 8px;
+    user-select: none;
+    vertical-align: middle;
+}
+.promo-btn {
+    display: inline-block;
+    padding: 2px 10px;
+    font-size: 11.5px;
+    font-weight: 600;
+    line-height: 1.35;
+    border-radius: 14px;
+    text-decoration: none !important;
+    transition: all 0.15s ease-in-out;
+}
+/* Левая позиция: Вкл */
+.promo-btn--on.is-active {
+    background-color: #198754;
+    color: #fff;
+    cursor: default;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+}
+.promo-btn--on.is-inactive {
+    color: #495057;
+    background: transparent;
+}
+.promo-btn--on.is-inactive:hover {
+    color: #198754;
+    background: rgba(25, 135, 84, 0.14);
+}
+/* Правая позиция: Откл */
+.promo-btn--off.is-active {
+    background-color: #dc3545;
+    color: #fff;
+    cursor: default;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+}
+.promo-btn--off.is-inactive {
+    color: #495057;
+    background: transparent;
+}
+.promo-btn--off.is-inactive:hover {
+    color: #dc3545;
+    background: rgba(220, 53, 69, 0.14);
+}
 CSS
 );
 
@@ -81,24 +135,25 @@ $headSyncWarnings = $data['headSyncWarnings'] ?? [];
                 <?php foreach ($networks as $net): ?>
                     <div class="promo-net-pill">
                         <span class="status-indicator <?= $net->status ? 'on' : 'off' ?>"></span>
-                        <span class="me-2 fw-semibold"><?= Html::encode($net->name) ?></span>
-                        <?php if ($net->status): ?>
-                            <span class="badge bg-success-subtle text-success me-2" style="font-size: 11px;">Вкл</span>
-                            <?= Html::a('Откл', ['/ad/ad-network/toggle', 'id' => $net->id], [
-                                'class' => 'btn btn-sm btn-link text-danger p-0 text-decoration-none',
-                                'style' => 'font-size: 11.5px;',
-                                'data-method' => 'post',
-                                'title' => 'Отключить загрузку библиотеки из <head>',
-                            ]) ?>
-                        <?php else: ?>
-                            <span class="badge bg-secondary-subtle text-secondary me-2" style="font-size: 11px;">Выкл</span>
-                            <?= Html::a('Вкл', ['/ad/ad-network/toggle', 'id' => $net->id], [
-                                'class' => 'btn btn-sm btn-link text-success p-0 text-decoration-none fw-bold',
-                                'style' => 'font-size: 11.5px;',
-                                'data-method' => 'post',
-                                'title' => 'Включить загрузку библиотеки в <head>',
-                            ]) ?>
-                        <?php endif; ?>
+                        <span class="fw-semibold"><?= Html::encode($net->name) ?></span>
+                        <div class="promo-toggle-group">
+                            <!-- Слева ВСЕГДА Вкл -->
+                            <?php if ($net->status): ?>
+                                <span class="promo-btn promo-btn--on is-active" title="Сейчас включено в <head>">Вкл</span>
+                                <?= Html::a('Откл', ['/ad/ad-network/toggle', 'id' => $net->id], [
+                                    'class' => 'promo-btn promo-btn--off is-inactive',
+                                    'data-method' => 'post',
+                                    'title' => 'Отключить из <head>',
+                                ]) ?>
+                            <?php else: ?>
+                                <?= Html::a('Вкл', ['/ad/ad-network/toggle', 'id' => $net->id], [
+                                    'class' => 'promo-btn promo-btn--on is-inactive',
+                                    'data-method' => 'post',
+                                    'title' => 'Включить в <head>',
+                                ]) ?>
+                                <span class="promo-btn promo-btn--off is-active" title="Сейчас отключено">Откл</span>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -142,21 +197,26 @@ $headSyncWarnings = $data['headSyncWarnings'] ?? [];
             }
             ?>
             <?php if ($adfinityNet): ?>
-                <div class="mt-2">
-                    Статус Adfinity в &lt;head&gt;:
-                    <?php if ($adfinityNet->status): ?>
-                        <span class="badge bg-success">Подключён в &lt;head&gt;</span>
-                        <?= Html::a('Отключить', ['/ad/ad-network/toggle', 'id' => $adfinityNet->id], [
-                            'class' => 'btn btn-xs btn-outline-danger btn-sm py-0 px-2 ms-2',
-                            'data-method' => 'post',
-                        ]) ?>
-                    <?php else: ?>
-                        <span class="badge bg-secondary">Отключён</span>
-                        <?= Html::a('Включить', ['/ad/ad-network/toggle', 'id' => $adfinityNet->id], [
-                            'class' => 'btn btn-xs btn-outline-success btn-sm py-0 px-2 ms-2',
-                            'data-method' => 'post',
-                        ]) ?>
-                    <?php endif; ?>
+                <div class="mt-2 d-inline-flex align-items-center">
+                    <span class="me-2 text-muted">Статус Adfinity в &lt;head&gt;:</span>
+                    <div class="promo-toggle-group">
+                        <!-- Слева ВСЕГДА Вкл -->
+                        <?php if ($adfinityNet->status): ?>
+                            <span class="promo-btn promo-btn--on is-active" title="Сейчас включено в <head>">Вкл</span>
+                            <?= Html::a('Откл', ['/ad/ad-network/toggle', 'id' => $adfinityNet->id], [
+                                'class' => 'promo-btn promo-btn--off is-inactive',
+                                'data-method' => 'post',
+                                'title' => 'Отключить из <head>',
+                            ]) ?>
+                        <?php else: ?>
+                            <?= Html::a('Вкл', ['/ad/ad-network/toggle', 'id' => $adfinityNet->id], [
+                                'class' => 'promo-btn promo-btn--on is-inactive',
+                                'data-method' => 'post',
+                                'title' => 'Включить в <head>',
+                            ]) ?>
+                            <span class="promo-btn promo-btn--off is-active" title="Сейчас отключено">Откл</span>
+                        <?php endif; ?>
+                    </div>
                 </div>
             <?php endif; ?>
         </div>
