@@ -19,7 +19,7 @@ class AdSearch extends Ad
     {
         return [
             [['id', 'position_id', 'status', 'mobile', 'ad'], 'integer'],
-            [['code', 'config', 'theme'], 'safe'],
+            [['code', 'comment', 'config', 'theme'], 'safe'],
         ];
     }
 
@@ -64,6 +64,7 @@ class AdSearch extends Ad
         ]);
 
         $query->andFilterWhere(['like', 'code', $this->code])
+            ->andFilterWhere(['like', 'comment', $this->comment])
             ->andFilterWhere(['like', 'config', $this->config])
             ->andFilterWhere(['like', 'theme', $this->theme]);
 

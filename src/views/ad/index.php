@@ -477,7 +477,7 @@ body.dark .promo-table-panel {
     -webkit-overflow-scrolling: touch;
 }
 .promo-table-panel .grid-view table {
-    min-width: 1100px;
+    min-width: 1320px;
     margin-bottom: 0;
 }
 
@@ -487,20 +487,25 @@ body.dark .promo-table-panel {
 .badge-soft-danger  { background: rgba(226, 78, 108, 0.12) !important; color: #e24e6c !important; font-weight: 600; font-size: 12px; }
 .badge-soft-primary { background: rgba(49, 137, 247, 0.12) !important; color: #3189f7 !important; font-weight: 600; font-size: 12px; }
 .badge-soft-info    { background: rgba(40, 101, 190, 0.12) !important; color: #2865be !important; font-weight: 600; font-size: 12px; }
+.badge-soft-secondary { background: rgba(100, 116, 139, 0.14) !important; color: #475569 !important; font-weight: 600; font-size: 12px; }
 
 html.dark .badge-soft-success, body.dark .badge-soft-success { background: rgba(7, 155, 112, 0.22) !important; color: #4ae0b1 !important; }
 html.dark .badge-soft-warning, body.dark .badge-soft-warning { background: rgba(238, 166, 60, 0.22) !important; color: #ffc46a !important; }
 html.dark .badge-soft-danger, body.dark .badge-soft-danger  { background: rgba(226, 78, 108, 0.22) !important; color: #ff849d !important; }
 html.dark .badge-soft-primary, body.dark .badge-soft-primary { background: rgba(49, 137, 247, 0.22) !important; color: #87bbff !important; }
 html.dark .badge-soft-info, body.dark .badge-soft-info    { background: rgba(40, 101, 190, 0.22) !important; color: #8cb8f8 !important; }
+html.dark .badge-soft-secondary, body.dark .badge-soft-secondary { background: rgba(148, 163, 184, 0.22) !important; color: #cbd5e1 !important; }
 
 /* Код баннера */
 .promo-code-block {
     margin: 0;
+    width: 320px;
+    max-width: 100%;
+    max-height: 110px;
+    overflow: auto;
     white-space: pre-wrap;
     word-break: break-word;
-    overflow-wrap: anywhere;
-    max-width: 620px;
+    overflow-wrap: break-word;
     font-size: 12px;
     font-family: 'JetBrains Mono', Consolas, Monaco, monospace;
     background: #f8fafc;
@@ -712,11 +717,27 @@ $headSyncWarnings = $data['headSyncWarnings'] ?? [];
                 ],
                 [
                     'attribute' => 'code',
+                    'options' => ['style' => 'width: 340px; min-width: 340px; max-width: 340px;'],
+                    'headerOptions' => ['style' => 'width: 340px; min-width: 340px;'],
+                    'contentOptions' => ['style' => 'width: 340px; min-width: 340px; max-width: 340px;'],
                     'format' => 'raw',
                     'value' => static function ($model) {
                         return Html::tag('pre', Html::encode((string) $model->code), [
                             'class' => 'promo-code-block',
                         ]);
+                    },
+                ],
+                [
+                    'attribute' => 'comment',
+                    'options' => ['width' => '170'],
+                    'headerOptions' => ['style' => 'min-width: 150px;'],
+                    'contentOptions' => ['style' => 'min-width: 150px; max-width: 220px; white-space: normal; word-break: break-word;'],
+                    'format' => 'raw',
+                    'value' => static function ($model) {
+                        $comment = trim((string) ($model->comment ?? ''));
+                        return $comment !== ''
+                            ? '<span class="badge badge-soft-info">' . Html::encode($comment) . '</span>'
+                            : '<span class="text-muted">—</span>';
                     },
                 ],
                 [

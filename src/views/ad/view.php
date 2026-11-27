@@ -49,6 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'status',
                 'value' => $model->status ? 'Включен' : 'Выключен',
             ],
+            'comment',
             [
                 'attribute' => 'code',
                 'format' => 'raw',

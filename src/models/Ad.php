@@ -13,6 +13,7 @@ use yii\db\ActiveRecord;
  * @property int $id
  * @property int $position_id
  * @property string $code
+ * @property string|null $comment
  * @property int $ad
  * @property int $status
  * @property string|null $config
@@ -105,7 +106,8 @@ class Ad extends ActiveRecord
             [['position_id', 'code', 'ad', 'status', 'mobile'], 'required'],
             [['position_id', 'ad', 'status', 'mobile', 'margin_top', 'wait', 'frequency'], 'integer'],
             [['code', 'config'], 'string'],
-            [['theme'], 'string', 'max' => 255],
+            [['comment'], 'trim'],
+            [['theme', 'comment'], 'string', 'max' => 255],
             [['margin_top', 'wait'], 'default', 'value' => 0],
             [['frequency'], 'default', 'value' => 1],
         ];
@@ -120,6 +122,7 @@ class Ad extends ActiveRecord
             'id' => 'ID',
             'position_id' => 'Позиция',
             'code' => 'Код',
+            'comment' => 'Комментарий',
             'ad' => 'Реклама',
             'status' => 'Статус',
             'config' => 'Config',

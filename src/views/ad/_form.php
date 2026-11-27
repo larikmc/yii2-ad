@@ -95,6 +95,14 @@ use yii\widgets\ActiveForm;
         'placeholder' => 'Вставьте HTML / JavaScript код баннера',
     ]) ?>
 
+    <?= $form->field($model, 'comment', [
+        'options' => ['class' => 'form-group mb-3'],
+    ])->textInput([
+        'maxlength' => 255,
+        'class' => 'form-control',
+        'placeholder' => 'Например: старое, новое, тест позиции',
+    ]) ?>
+
     <?= $form->field($model, 'status')->dropDownList([
         1 => 'Включен',
         0 => 'Выключен',

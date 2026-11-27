@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-11-27
+
+### Added
+- **Admin Comment for Ad Blocks**: Added optional `comment` column (`m261127_120000_add_comment_to_ad_table`), form field, view detail row, and filterable column in `/admin/ad/ad/index`.
+
+### Fixed
+- **Fixed Width & Scrollable Code Column**: Gave the `code` column fixed `340px` width and bounded scrollable preview box (`.promo-code-block`) so it no longer collapses into a narrow vertical column.
+- **Light Theme Soft Secondary Badges**: Added `.badge-soft-secondary` styling for light and dark themes so `margin_top` and `wait` badges remain clearly visible on light backgrounds.
+
 ## [1.1.0] - 2026-11-23
 
 ### Added
